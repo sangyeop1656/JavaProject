@@ -44,6 +44,9 @@ public class exam2 {
      * 프로그램의 진입점입니다.
      * 
      * @param args 명령행 인수
+     * 
+     * 2024-12-21일에 생성
+     * 학번 중복 체크하면 프로그램 종료 코드 생성
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -59,6 +62,13 @@ public class exam2 {
         for (int i = 0; i < numStudents; i++) {
             System.out.print("학번을 입력하세요: ");
             String studentId = scanner.nextLine();
+            
+         // 학번 중복 체크
+            if (studentMap.containsKey(studentId)) {
+                System.out.println("학번이 이미 존재합니다: " + studentId);
+                System.exit(0); // 프로그램 종료
+            }
+            
             System.out.print("이름을 입력하세요: ");
             String name = scanner.nextLine();
             System.out.print("성적을 입력하세요: ");
