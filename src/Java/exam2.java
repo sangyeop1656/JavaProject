@@ -103,6 +103,21 @@ public class exam2 {
         } catch (IOException e) {
             System.out.println("파일 저장 중 오류가 발생했습니다.");
         }
+        
+     // 학생 수와 평균 성적 계산
+        double totalGrades = 0;
+        for (Student student : students) {
+            totalGrades += student.grade;
+        }
+        double averageGrade = totalGrades / numStudents;
+
+        // 파일에 학생 수와 평균 성적 추가
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write("전체 학생 수: " + numStudents + "\n");
+            writer.write("학생들의 평균 성적: " + String.format("%.2f", averageGrade) + "\n");
+        } catch (IOException e) {
+            System.out.println("파일 저장 중 오류가 발생했습니다.");
+        }
 
         // 특정 학번 검색
         System.out.print("확인하고 싶은 학번을 입력하세요: ");
