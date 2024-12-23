@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * 2024-12-19일에 생성 학생 정보를 관리하는 클래스입니다.
+ * 2024-12-19일에 생성 학생 정보를 관리하는 클래스입니다
  */
 class Student {
 	String studentId; // 학생 학번
@@ -20,13 +21,13 @@ class Student {
 	String gradeLetter; // 학생 학점
 
 	/**
-	 * 2024-12-19일에 생성 Student 클래스의 생성자입니다.
+	 * 2024-12-19일에 생성 Student 클래스의 생성자입니다
 	 * 
 	 * @param studentId    학생 학번
 	 * @param name         학생 이름
 	 * @param grade        학생 성적
 	 * 
-	 * 2024-12-22일에 생성 Student 클래스의 생성자입니다.
+	 * 2024-12-22일에 생성 Student 클래스의 생성자입니다
 	 * @param gradeLetter; 초기값 설정
 	 */
 	public Student(String studentId, String name, double grade) {
@@ -49,7 +50,8 @@ public class exam2 {
 	 * 2024-12-21일에 생성 학번 중복 체크하면 프로그램 종료 코드 생성 전체 학생 수와 학생들의 평균 점수 계산
 	 * 결과 생성
 	 * 
-	 * 2024-12-22일에 학점 부여 코드 생성.
+	 * 2024-12-22일에 학점 부여 코드 생성
+	 * 2024-12-23일에 공동 점수인 학생 표시 코드 생성
 	 */
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
@@ -117,7 +119,11 @@ public class exam2 {
 		for (int i = lowMidCount; i < numStudents; i++) {
 		    students.get(i).gradeLetter = "C+";
 		}
-		
+		 // 공동 점수 학생 정보 저장
+        Map<Double, List<Student>> gradeMap = new HashMap<>();
+        for (Student student : students) {
+            gradeMap.computeIfAbsent(student.grade, k -> new ArrayList<>()).add(student);
+        }
 		// 파일 경로 설정
 		String userHome = System.getProperty("user.home");
 		String filePath = userHome + "/Desktop/students.csv";
@@ -133,7 +139,21 @@ public class exam2 {
 		} catch (IOException e) {
 			System.out.println("파일 저장 중 오류가 발생했습니다.");
 		}
-
+		// 파일에 공동 점수 학생 정보 추가
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+		    writer.write("\n공동 점수 학생들:\n");
+		    for (Map.Entry<Double, List<Student>> entry : gradeMap.entrySet()) {
+		        List<Student> sameGradeStudents = entry.getValue();
+		        if (sameGradeStudents.size() > 1) {
+		            writer.write("성적: " + entry.getKey() + " - 학생들: \n");
+		            for (Student student : sameGradeStudents) {
+		                writer.write("학번=" + student.studentId + ", 이름=" + student.name + "\n");
+		            }
+		        }
+		    }
+		} catch (IOException e) {
+		    System.out.println("파일 저장 중 오류가 발생했습니다.");
+		}
 		// 학생 수와 평균 성적 계산
 		double totalGrades = 0;
 		for (Student student : students) {
